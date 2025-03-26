@@ -1,0 +1,22 @@
+export const dummyUsers=[
+    {
+        name:"Sahil",
+        userName:"sahil@gmail.com",
+        role:"admin"
+    },
+    {
+        name:"Ram",
+        userName:"ram@gmail.com",
+        role:"user"
+    },
+    {
+        name:"Kiran",
+        userName:"kiran@gmail.com",
+        role:"user"
+    },
+    {
+        name:"Mohan",
+        userName:"mohan@gmail.com",
+        role:"user"
+    }
+]

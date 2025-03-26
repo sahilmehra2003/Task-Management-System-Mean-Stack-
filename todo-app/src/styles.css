@@ -1,0 +1,192 @@
+html, body{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color:#008cba; 
+  height:100%;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.dialog-actions{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.add-btn {
+  background-color: #4CAF50;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.add-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+.cancel-btn{
+  cursor: pointer;
+  margin-bottom: 20px;
+  color: white;
+  background-color: #2196F3;
+}
+
+/* Dialog Styles */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: bold;
+}
+
+.todo-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.todo-view {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.todo-checkbox {
+  margin-top: 5px;
+}
+
+.todo-content {
+  flex: 1;
+}
+
+.todo-content h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.todo-summary {
+  margin: 0 0 8px 0;
+  color: #666;
+}
+
+.todo-due-date {
+  margin: 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.edit-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.todo-edit {
+  margin-top: 10px;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}

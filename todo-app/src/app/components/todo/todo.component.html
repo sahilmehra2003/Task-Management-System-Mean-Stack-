@@ -1,0 +1,134 @@
+<div class="container">
+  <div class="top">
+  <h1>Todo App</h1>
+  <app-notification (isVisible)="getValue($event)"/>
+</div>
+  <div class="btns">
+    <button (click)="showDialog()" class="btn add-btn">Create New Todo</button>
+    <button (click)="logoutUser()" class="btn logout-btn">Logout</button>
+  </div>
+  @if(isDialogVisible){
+    <div class="dialog-overlay">
+      <div class="dialog">
+        <h2>Create New Todo</h2>
+        <form (ngSubmit)="addTodo()" #todoForm="ngForm" class="dialog-form">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input 
+              type="text" 
+              id="title"
+              [(ngModel)]="newTodoObj.title" 
+              name="title" 
+              required
+              class="todo-input"
+            >
+          </div>
+  
+          <div class="form-group">
+            <label for="summary">Summary</label>
+            <textarea 
+              id="summary"
+              [(ngModel)]="newTodoObj.summary" 
+              name="summary" 
+              required
+              class="todo-input textarea"
+            ></textarea>
+          </div>
+  
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input 
+              type="date" 
+              id="dueDate"
+              [(ngModel)]="newTodoObj.dueDate" 
+              name="dueDate" 
+              required
+              class="todo-input"
+            >
+          </div>
+          @if(user.role==="admin"){
+              <div class="form-group">
+                   <label for="dropdown">Add todo for users:</label>
+                   <input type="checkbox" (click)="setTodoforUsers()"/>
+                   @if(isTodoForUser){
+                    <select  name="userDropDown" id="dropdown" [(ngModel)]="selectedUserId">
+                      @for (user of userData; track user._id) {
+                        @if(user.role!=="admin"){
+                        <option value="{{user._id}}">{{user.name}}</option>
+                        }
+                      }
+                   </select>
+                   }
+                   
+              </div>
+          }
+  
+          <div class="dialog-actions">
+            <button type="button" (click)="hideDialog()" class="btn cancel-btn">Cancel</button>
+            <button type="submit" [disabled]="!todoForm.form.valid" class="btn add-btn">Add Todo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+  
+
+  <ul class="todo-list">
+    <h2>{{user.name}}</h2>
+    @for(todo of todos; track todo._id){
+      <li  class="todo-item">
+        <h2>userName:{{todo.userId.name}}</h2>
+        @if(!todo.editing){
+          <div [class.expired]="todo.isTodoExpired" class="todo-view" >
+            <input 
+              type="checkbox" 
+              [(ngModel)]="todo.completed"
+              (change)="updateTodoStatus(todo)"
+              class="todo-checkbox"
+            >
+            <div class="todo-content">
+              <h3 [class.completed]="todo.completed">{{ todo.title }}</h3>
+              <p class="todo-summary" [class.completed]="todo.completed">{{ todo.summary }}</p>
+              <p class="todo-due-date" [class.completed]="todo.completed">Due: {{ todo.dueDate | date:'dd/MM/yyyy' }}</p>
+              @if(todo.isTodoExpired){
+                 <p class="expired-text">Expired</p>
+              }
+            </div>
+            <div class="todo-actions">
+              <button (click)="startEditing(todo)" class="btn edit-btn">Edit</button>
+              <button (click)="deleteTodo(todo._id)" class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        }
+       
+        @else {
+          <div  class="todo-edit">
+            <div class="form-group">
+              <input 
+                type="text" 
+                [(ngModel)]="todo.title" 
+                class="todo-input"
+              >
+            </div>
+            <div class="form-group">
+              <textarea 
+                [(ngModel)]="todo.summary" 
+                class="todo-input textarea"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <input 
+                type="date" 
+                [(ngModel)]="todo.dueDate" 
+                class="todo-input"
+              >
+            </div>
+            <button (click)="updateTodo(todo)" class="btn save-btn">Save</button>
+          </div>
+        }
+        
+      </li>
+    }
+    
+  </ul>
+</div>

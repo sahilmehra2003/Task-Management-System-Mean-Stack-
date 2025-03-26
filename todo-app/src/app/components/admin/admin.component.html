@@ -1,0 +1,101 @@
+
+ <div>
+    <div class="heading">
+      <p>  Welcome Admin {{adminObj.name | titlecase }} </p>
+        <app-notification (isVisible)="getData($event)"/>
+    </div>
+    @if(isDialogVisible){
+        <div class="dialog-overlay">
+          <div class="dialog">
+            @if(isEditing===true){
+              <h2>Edit New User</h2>
+            }@else {
+              <h2>Create New User</h2>
+            }
+           
+            <form   class="dialog-form" [formGroup]="adminForm" (ngSubmit)="createUser()">
+              <div class="form-group">
+                <label for="Name">Name</label>
+                <input 
+                  type="text" 
+                  id="Name"
+                  formControlName="name"
+                  required
+                  class="todo-input"
+                >
+              </div>
+      
+              <div class="form-group">
+                <label for="userName">UserName</label>
+                <input 
+                  type="email"
+                  id="userName"
+                  formControlName="email"
+                  name="email" 
+                  required
+                  class="todo-input"
+                />
+              </div>
+              @if(!isEditing){
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input 
+                    type="password" 
+                    id="password"
+                    formControlName="password" 
+                    required
+                    class="todo-input"
+                  >
+                </div>
+              }
+             
+              <div class="form-group">
+                <label for="role">Role:</label>
+                <select formControlName="role">
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+              </div>
+      
+              <div class="dialog-actions">
+                <button type="button" (click)="hideDialog()" class="btn cancel-btn">Cancel</button>
+                @if(isEditing){
+                  <button class="btn add-btn"  type="button" (click)="onEditUsers()">Save</button>
+                }@else {
+                  <button type="submit" [disabled]="adminForm.invalid"  class="btn add-btn">Add User</button>
+                }
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+    <div class="user-table-container">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>{{`Email` | uppercase}}</th>
+                    <th>{{`Name` | uppercase}} </th>
+                    <th>{{`Role` | uppercase}} </th>
+                    <th>{{`Action` |uppercase}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of userList;let i=index;trackBy:trackByFn">
+                    <td>{{i+1}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.name | titlecase}}</td>
+                    <td>{{user.role | titlecase}}</td>
+                    <td>
+                        <button class="action-btn" (click)="onEdit(user)">Edit</button>
+                        <button class="action-btn delete" (click)="onDeleteUser(user._id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="admin-div">
+          <button class="create-btn" (click)="showDialog()">Create New User</button>
+        <button class="todo-btn" routerLink="/todo">Move to Todo Page</button>
+    </div>
+</div> 

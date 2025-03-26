@@ -1,0 +1,67 @@
+.heading{
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.user-table-container {
+    margin-top: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #2196F3;
+    color: white;
+    margin-right: 5px;
+}
+
+.action-btn.delete {
+    background-color: #F44336;
+}
+.admin-div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.todo-btn {
+    background-color: #6200EE;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.create-btn {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}

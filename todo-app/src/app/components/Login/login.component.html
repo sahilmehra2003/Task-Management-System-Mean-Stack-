@@ -1,0 +1,25 @@
+<div class="login-container">
+    <div class="login-header">
+        <h2>User Login Form</h2>
+    </div>
+</div>
+<div class="form-container">
+    <div class="form-box">
+        <form>
+            <div class="form-group">
+                <label>Enter Email:</label>
+                <input class="form-control" type="email" [(ngModel)]="userObj.email" name="email" />
+            </div>
+            <div class="form-group">
+                <label>Enter Password:</label>
+                <input class="form-control" type="password" [(ngModel)]="userObj.password" name="password"/>
+            </div>
+            <div class="form-actions">
+                <button class="login-btn" (click)="onLogin()">
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

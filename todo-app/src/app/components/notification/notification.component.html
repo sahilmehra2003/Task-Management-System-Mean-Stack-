@@ -1,0 +1,29 @@
+<div class="notification-container">
+    <div class="notification-icon" 
+         [ngClass]="{'active': isDropDownVisible}"  
+         (click)="toggleDropdown()">
+        <i class="fas fa-bell"></i>
+        <span id="notification-count" class="badge">{{notificationCount$ | async}}</span>
+    </div>
+
+    <div id="notification-dropdown"  
+         [ngClass]="{'active': isDropDownVisible}"  
+         class="dropdown" 
+         *ngIf="isDropDownVisible">
+
+         <p *ngIf="hasUnreadNotifications.length === 0">
+            No new notifications
+        </p>
+        
+        <ul id="notification-list" *ngIf="hasUnreadNotifications.length > 0">
+            <li *ngFor="let notification of hasUnreadNotifications" 
+                (click)="markAsRead(notification._id)" 
+                class="notification" 
+                [ngClass]="{'unread': true}">
+                
+                <p>{{notification.message}}</p>
+                <p>{{notification.createdAt | date:'dd-MM-yyyy hh:mm'}}</p>
+            </li>
+        </ul>
+    </div>
+</div>

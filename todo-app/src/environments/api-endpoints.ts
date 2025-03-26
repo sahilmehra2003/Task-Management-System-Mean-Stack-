@@ -1,0 +1,25 @@
+export const API_ENDPOINTS={
+    USERS:{
+        GET_ALL:'/user/getusers',
+        ADMIN_CREATE_USER:'/user/admincreateuser',
+        UPDATE:'/user/updateuserdetails/:id',
+        DELETE:'/user/deleteuser/:id',
+    },
+    TODOS:{
+    GET_ALL:'/todo/getAllTodo',
+    GET_BY_ID:'/todo/getTodo',
+    CREATE:'/todo/createtodo',
+    UPDATE:'/todo/updatetodo/:id',
+    DELETE:'/todo/deleteTodo/:id'
+   },
+   AUTH:{
+     SIGNUP:'/user/signup',
+     LOGIN:'/user/login',
+     LOGOUT:'/user/logout',
+   },
+   NOTIFICATIONS:{
+      CREATE:'/notification/createnotification',
+      DELETE:'/notification/deleteNotification/:id',
+      FETCH:'/notification/getNotificationforuser/:id'
+   }
+}
