@@ -1,13 +1,15 @@
 const User=require('../models/user.model');
-
-
+const { createValidationSchema }=require('../helper/validation_schema')
+const {fileUpload}=require('../helper/fileUpload')
+const {removeLocalFile}=require('../helper/remove_localFile')
+const uuidv4=require('uuid').v4
 const generateJwtToken=async(userId)=>{ 
     try {
         const user=await User.findOne({_id:userId})
         const jwtToken=await user.generateToken();
         //  console.log(jwtToken);
-        user.token=jwtToken;
-        await user.save({validateBeforeSave:false});
+        // user.token=jwtToken;
+        // await user.save({validateBeforeSave:false});
         return jwtToken;
     } catch (error) {
         console.log(error.message)
@@ -16,25 +18,39 @@ const generateJwtToken=async(userId)=>{
 
 exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required."
-            });
-        }
-
+        const { name, email, password } =req.body;
+        
+        const schema= createValidationSchema(['name','email','password'])
+        await schema.validateAsync(req.body)
+        // the lean() method is used to return documents from queries as plain JavaScript objects  instead of Mongoose documents, making queries faster and less memory intensive.
+       // By default, Mongoose queries return instances of the Mongoose Document class, which are heavier due to internal state for change tracking. Enabling the lean option skips the instantiation of a full Mongoose document and returns a plain JavaScript objects
+      //  lean should be use in read only cases  
         const registeredUser = await User.findOne({ email }).lean();
         if (registeredUser) {
+            // if user is registered already and he is sending profile image then the file needs to be removed locally
+            const profileImageLocalPath=req.files?.profileImage[0]?.path
+            removeLocalFile(profileImageLocalPath);
             return res.status(409).json({
                 success: false,
                 message: "Email already registered."
             });
         }
+        const profileImageLocalPath=req.files?.profileImage[0]?.path
+        // console.log("profileImage:",profileImage);
+        if (!profileImageLocalPath) {
+            return res.status(400).json({
+                success:false,
+                message:"Please add your profile pic in the form",  
+            })
+        }
+        // Joi validation on file
+        const fileSchema=createValidationSchema(['profileImage'])
+        await fileSchema.validateAsync(req.files?.profileImage[0])
+        const fileName=uuidv4()
+        const profileImage=await fileUpload(profileImageLocalPath,fileName,"auto");
+        const newUser = await User.create({ name, email, password,profileImage:profileImage.secure_url });
 
-        const newUser = await User.create({ name, email, password });
-
-        const createdUser = await User.findById(newUser._id).select("-password -token");
+        const createdUser = await User.findById(newUser._id).select("-password");
 
         return res.status(201).json({
             success: true,
@@ -43,10 +59,13 @@ exports.registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({
+        const errorMessage=error.isJoi ? error.details[0]?.message : "Server error in signup";
+        let statusCode=error.isJoi ? 422:500;
+        console.log(statusCode)
+        return res.status(statusCode).json({
             success: false,
-            message: "Server error while registering user.",
-            error: error.message
+            message:errorMessage,
+            error:error.message
         });
     }
 };
@@ -54,17 +73,41 @@ exports.registerUser = async (req, res) => {
 exports.adminCreateUser=async(req,res)=>{
     try {
         const {name,email,password,role}=req.body;
-        if (!name || !email || !password || !role) {
-             return res.status(400).json({
+        const schema= createValidationSchema(['name','email','password'])
+        await schema.validateAsync(req.body)
+        // if (!name || !email || !password || !role) {
+        //      return res.status(400).json({
+        //         success: false,
+        //         message: "Error in creating new user please fill all the fields"
+        //     });
+        // } 
+        const registeredUser = await User.findOne({ email }).lean();
+        if (registeredUser) {
+            // if user is registered already and he is sending profile image then the file needs to be removed locally
+            const profileImageLocalPath=req.files?.profileImage[0]?.path
+            removeLocalFile(profileImageLocalPath);
+            return res.status(409).json({
                 success: false,
-                message: "Error in creating new user please fill all the fields"
+                message: "Email already registered."
             });
-        } 
+        }
+        const profileImageLocalPath=req.files?.profileImage[0]?.path
+        if (!profileImageLocalPath) {
+            return res.status(400).json({
+                success:false,
+                message:"Please add your profile pic in the form",  
+            })
+        }
+        const fileSchema=createValidationSchema(['profileImage'])
+        await fileSchema.validateAsync(req.files?.profileImage[0])
+        const fileName=uuidv4()
+        const profileImage=await fileUpload(profileImageLocalPath,fileName,"auto");
         const newUser=await User.create({
             name:name,
             email:email,
             password:password,
-            role:role
+            role:role,
+            profileImage:profileImage?.secure_url
         })
         if (!newUser) {
             return res.status(400).json({
@@ -72,17 +115,20 @@ exports.adminCreateUser=async(req,res)=>{
                 message: "Error in creating new user"
             });
         }
-        const createdUser=await User.findById(newUser._id).select("-password -token");
+        const createdUser=await User.findById(newUser._id).select("-password");
         return res.status(201).json({
             success: true,
             message: "New user created successfully by admin",
             data: createdUser
         });
     } catch (error) {
-        return res.status(500).json({
+        const errorMessage=error.isJoi ? error.details[0]?.message : "Server error in signup";
+        let statusCode=error.isJoi ? 422:500;
+        console.log(statusCode)
+        return res.status(statusCode).json({
             success: false,
-            message: "Server error while admin creating user.",
-            error: error.message
+            message:errorMessage,
+            error:error.message
         });
     }
 }
@@ -169,7 +215,7 @@ exports.logoutUser=async(req,res)=>{
 }
 exports.fetchUsers=async(req,res)=>{
     try {
-        const users=await User.find().select("-password -token");
+        const users=await User.find().select("-password");
         if (!users || users.length===0) {
             return res.status(400).json({
                 success: false,
@@ -190,6 +236,37 @@ exports.fetchUsers=async(req,res)=>{
     }
 }
 
+exports.fetchUserById=async(req,res)=>{
+    try {
+        const {id}=req.params;
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "No id  found.",
+            });
+        }
+        const fetchedUser=await User.findById(id);
+        if (!fetchedUser) {
+            return res.status(403).json({
+                success: false,
+                message: "Incorrect id user not found",
+            });
+        }
+        return res.status(200).json({
+            success:true,
+            message:"User fetched successfully",
+            data:fetchedUser
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error while fetching user.",
+            error: error.message
+        }); 
+    }
+}
+
+
 exports.updateUser=async(req,res)=>{
     try {
         const {id}=req.params;
@@ -199,7 +276,21 @@ exports.updateUser=async(req,res)=>{
                 message:"Id is required to update user"
             })
         }
-        const updatedUser=await User.findByIdAndUpdate(id,req.body,{new:true}).select("-password -token");
+        const profileImageLocalPath=req.files?.profileImage[0]?.path
+        // console.log("profileImage:",profileImage);
+        let updatedUser;
+        // console.log(profileImageLocalPath);
+       if (profileImageLocalPath) {
+          // Joi validation on file
+        const fileSchema=createValidationSchema(['profileImage'])
+        await fileSchema.validateAsync(req.files?.profileImage[0])
+        const fileName=uuidv4()
+        const profileImage=await fileUpload(profileImageLocalPath,fileName,"auto");
+         updatedUser=await User.findByIdAndUpdate(id,{...req.body,profileImage:profileImage.secure_url},{new:true}).select("-password");
+        //  console.log(updatedUser);
+       }else{
+          updatedUser=await User.findByIdAndUpdate(id,req.body,{new:true}).select("-password");
+       }
         if (!updatedUser) {
             return res.status(404).json({
                 success:false,

@@ -4,6 +4,7 @@ export const API_ENDPOINTS={
         ADMIN_CREATE_USER:'/user/admincreateuser',
         UPDATE:'/user/updateuserdetails/:id',
         DELETE:'/user/deleteuser/:id',
+        GET_USER_BY_ID:'/user/getuserbyid/:id'
     },
     TODOS:{
     GET_ALL:'/todo/getAllTodo',
@@ -19,7 +20,7 @@ export const API_ENDPOINTS={
    },
    NOTIFICATIONS:{
       CREATE:'/notification/createnotification',
-      DELETE:'/notification/deleteNotification/:id',
+      UPDATE:'/notification/updateNotification/:id',
       FETCH:'/notification/getNotificationforuser/:id'
    }
 }

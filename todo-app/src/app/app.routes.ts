@@ -31,6 +31,6 @@ export const routes: Routes = [
     {
         path:'admin-page',
         component:AdminComponent,
-        resolve:{users:UserResolver}
+        // resolve:{users:UserResolver}
     }
 ];

@@ -19,8 +19,8 @@
             <li *ngFor="let notification of hasUnreadNotifications" 
                 (click)="markAsRead(notification._id)" 
                 class="notification" 
-                [ngClass]="{'unread': true}">
-                
+                [ngClass]="readClass">
+                 <p>{{notification.title}}</p>
                 <p>{{notification.message}}</p>
                 <p>{{notification.createdAt | date:'dd-MM-yyyy hh:mm'}}</p>
             </li>

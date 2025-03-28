@@ -12,6 +12,12 @@ const todoSchema=new Schema({
         trim:true,
         lowercase:true,
     },
+    adminComment:{
+        type:String,
+        maxlength:30,
+        trim:true,
+        lowercase:true
+    },
     dueDate:{
         type:Date,
         required:true,

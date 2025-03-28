@@ -65,3 +65,9 @@ label {
 .login-btn:hover {
     background-color: #0056b3;
 }
+.text-danger {
+    color: #dc3545;
+    font-size: 14px; 
+    font-weight: 500;
+    margin-top: 4px;
+}

@@ -45,7 +45,7 @@ exports.createNotification=async(req,res)=>{
     }
 }
 
-exports.deleteNotification=async(req,res)=>{
+exports.updateNotification=async(req,res)=>{
     try {
        const userId=req.user.id 
        const {id}=req.params;
@@ -55,13 +55,13 @@ exports.deleteNotification=async(req,res)=>{
              message:"Id or userID not found to delete notification!"
           })
        }
-       const deletedNotification=await Notification.findByIdAndDelete(id,{new:true});
-       if (!deletedNotification) {
-          return res.status(403).json({
-             success:false,
-             message:"Error in deleting notification,invalid notification id"
-          })
-       }
+    //    const deletedNotification=await Notification.findByIdAndDelete(id,{new:true});
+    //    if (!deletedNotification) {
+    //       return res.status(403).json({
+    //          success:false,
+    //          message:"Error in deleting notification,invalid notification id"
+    //       })
+    //    }
        const updateUser=await User.findByIdAndUpdate(
         userId,{
            $inc:{
@@ -73,13 +73,13 @@ exports.deleteNotification=async(req,res)=>{
        })
        return res.status(200).json({
           success:true,
-          message:"Notifiaction deleted successfully", 
+          message:"Notifiaction read", 
           data:updateUser
        })
     } catch (error) {
         return res.status(500).json({
             success:false,
-            message:"Server Error in deleting notification for user",
+            message:"Server Error in reducing notification count",
             error:error.message
         }) 
     }
@@ -96,7 +96,7 @@ exports.fetchNotificationByUserId=async(req,res)=>{
         }
         // console.log(userId);
         const fetchedNotification=await Notification.find({userId:id});
-        console.log(fetchedNotification)
+        // console.log(fetchedNotification)
         if (!fetchedNotification ) {
             return res.status(403).json({
                 success:false,   

@@ -5,4 +5,5 @@ export interface User {
     _id:string;
     password?:string;
     notification_count?:number;
+    profileImage?:string;
 } 

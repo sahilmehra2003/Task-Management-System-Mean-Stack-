@@ -18,16 +18,24 @@ export class LoginComponent {
   };
   constructor(private authsrvc:AuthService) {}
   onLogin() {
-     this.authsrvc.login(this.userObj).subscribe((res)=>{
+     this.authsrvc.login(this.userObj).subscribe({
+        next:(res)=>{
           const user=res.data.loggedInUser;
           const token=res.data.token
           localStorage.setItem("token",token);
           localStorage.setItem("user",JSON.stringify(user));
+          alert(res.message)
           if (user.role==="admin") {
              this.router.navigateByUrl('/admin-page')
           }else{
              this.router.navigateByUrl('/todo')
           }
+        },
+        error:(err)=>{
+          const errorMessage=err.error?.message
+          alert(errorMessage);
+        }
+         
      })
   }
 }

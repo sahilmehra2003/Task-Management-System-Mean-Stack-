@@ -1,6 +1,7 @@
 const {Schema,model}=require('mongoose');
 const bcrypt=require('bcrypt')
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const { string } = require('joi');
 require('dotenv').config()
 const userSchema=new Schema({
    name:{
@@ -29,9 +30,8 @@ const userSchema=new Schema({
      type:Number,
      default:0
    },
-   token:{
+   profileImage:{
      type:String,
-     
    }
 })
 userSchema.pre('save',async function (next) {

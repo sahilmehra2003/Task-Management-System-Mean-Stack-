@@ -12,9 +12,9 @@ import { AuthService } from '../../Services/auth/auth.service';
 })
 export class SignupComponent {
   signupForm:FormGroup=new FormGroup({
-    name:new FormControl('',[Validators.required]),
-    email:new FormControl('',[Validators.required]),
-    password:new FormControl('',[Validators.required]),
+    name:new FormControl('',[Validators.required,Validators.minLength(3)]),
+    email:new FormControl('',[Validators.required,Validators.email]),
+    password:new FormControl('',[Validators.required,Validators.minLength(8),Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]),
  })
  router=inject(Router);
  user:any
@@ -22,11 +22,22 @@ export class SignupComponent {
  constructor(private authsrvc:AuthService){}
 
  onSignup(){
-    // console.log(this.signupForm);
-    this.authsrvc.signup(this.signupForm.value).subscribe((res)=>{
-        this.user=res 
-        console.log(this.user);
-        this.router.navigateByUrl('/login');
+    this.authsrvc.signup(this.signupForm.value).subscribe({
+          next:(res:any)=>{
+            // console.log(res);
+            this.user=res.data;
+            console.log("user:",this.user)
+            alert(res.message)
+            this.router.navigateByUrl('/login');
+          },
+          error:(err)=>{
+            const errorMessage=err.error?.message;
+            console.log(errorMessage)
+            alert(errorMessage);
+          }
+       
     })
  }
 }
+
+

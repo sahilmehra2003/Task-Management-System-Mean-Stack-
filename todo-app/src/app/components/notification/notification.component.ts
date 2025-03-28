@@ -17,7 +17,7 @@ export class NotificationComponent implements OnInit {
   user:User=JSON.parse(localStorage.getItem('user')!)
   notificationCount$!: Observable<number>;
   @Output() isVisible:EventEmitter <boolean>=new EventEmitter<boolean>()
- 
+  readClass:string='unread'
   constructor(private notificationService: NotificationService) {}
   
   toggleDropdown() {
@@ -47,6 +47,7 @@ export class NotificationComponent implements OnInit {
     this.notificationService.markAsRead(notificationId).subscribe((res:any) => {
       if (res.success) {
         console.log(res.data)
+        this.readClass="read"
       }
       console.log("user in mark as read",this.user);
       this.notificationService.fetchNotifications(this.user._id);

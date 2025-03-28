@@ -90,6 +90,7 @@
               <h3 [class.completed]="todo.completed">{{ todo.title }}</h3>
               <p class="todo-summary" [class.completed]="todo.completed">{{ todo.summary }}</p>
               <p class="todo-due-date" [class.completed]="todo.completed">Due: {{ todo.dueDate | date:'dd/MM/yyyy' }}</p>
+              <p class="" [class.completed]="todo.completed">Admin Comment: {{todo.adminComment || "No comment added"}}</p>
               @if(todo.isTodoExpired){
                  <p class="expired-text">Expired</p>
               }
@@ -110,6 +111,17 @@
                 class="todo-input"
               >
             </div>
+              <div>
+                <label for="comment">AdminComment</label>
+                <input
+                type="text"
+                id="comment"
+                [(ngModel)]="todo.adminComment"
+                name="comment"
+                class="todo-input"
+                />
+              </div>
+            
             <div class="form-group">
               <textarea 
                 [(ngModel)]="todo.summary" 

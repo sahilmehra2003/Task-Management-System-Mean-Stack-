@@ -5,6 +5,7 @@ export interface Todo {
       _id:string,
       name:string
     };
+    adminComment?:string
     title: string;
     completed: boolean;
     editing?: boolean;

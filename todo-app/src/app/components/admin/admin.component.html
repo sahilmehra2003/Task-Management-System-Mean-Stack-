@@ -13,7 +13,7 @@
               <h2>Create New User</h2>
             }
            
-            <form   class="dialog-form" [formGroup]="adminForm" (ngSubmit)="createUser()">
+            <form  class="dialog-form" [formGroup]="adminForm" (ngSubmit)="createUser()">
               <div class="form-group">
                 <label for="Name">Name</label>
                 <input 
@@ -23,10 +23,19 @@
                   required
                   class="todo-input"
                 >
+                @if(adminForm.controls['name'].invalid && (adminForm.controls['name'].touched || adminForm.controls['name'].dirty )){
+                  <p>
+                   @if(adminForm.controls['name'].errors?.['required']){
+                       <span class="text-danger">* This is required field</span>
+                   }@else if (adminForm.controls['name'].errors?.['minlength']) {
+                      <span class="text-danger">* Length of name should be atleast 3 characters</span>
+                   }
+                  </p>
+              }   
               </div>
       
               <div class="form-group">
-                <label for="userName">UserName</label>
+                <label for="userName">Email</label>
                 <input 
                   type="email"
                   id="userName"
@@ -35,7 +44,18 @@
                   required
                   class="todo-input"
                 />
+                @if(adminForm.controls['email'].invalid && (adminForm.controls['email'].touched || adminForm.controls['email'].dirty )){
+                  <p>
+                   @if(adminForm.controls['email'].errors?.['required']){
+                       <span class="text-danger">* This is required field</span>
+                   }@else if (adminForm.controls['email'].errors?.['email']) {
+                      <span class="text-danger">* Please enter a valid email.</span>
+                   }
+                  </p>
+              }   
               </div>
+              
+             
               @if(!isEditing){
                 <div class="form-group">
                   <label for="password">Password</label>
@@ -46,6 +66,21 @@
                     required
                     class="todo-input"
                   >
+                  @if (adminForm.controls['password'].invalid && (adminForm.controls['password'].touched || adminForm.controls['password'].dirty)) {
+                    <p>
+                     @if(adminForm.controls['password'].errors?.['required']){
+                         <span class="text-danger">* This is required field</span>
+                     }@else if (adminForm.controls['password'].errors?.['minlength']) {
+                        <span class="text-danger">* Password should have atleast length of 8 .</span>
+                     }@else if(adminForm.controls['password'].errors?.['pattern']){
+                        <span class="text-danger">* Please follow this pattern to create password-> <br>
+                            1) At least one lowercase letter<br>
+                            2) At least one uppercase letter<br>
+                            3) At least one digit<br>
+                            4) At least one special character</span>
+                     }
+                    </p>
+                }
                 </div>
               }
              
@@ -55,8 +90,17 @@
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                 </select>
+                @if (adminForm.controls['role'].invalid && (adminForm.controls['role'].touched || adminForm.controls['role'].dirty)) {
+                  <p>
+                   @if(adminForm.controls['role'].errors?.['required']){
+                       <span class="text-danger">* This is required field</span>
+                   }
+                }
               </div>
-      
+              <div class="form-group">
+                  <label>Profile Image: </label>
+                  <input type="file" name="profileImage"  #file (change)="onFileChange($event)"/>
+              </div>
               <div class="dialog-actions">
                 <button type="button" (click)="hideDialog()" class="btn cancel-btn">Cancel</button>
                 @if(isEditing){
@@ -77,6 +121,7 @@
                     <th>{{`Email` | uppercase}}</th>
                     <th>{{`Name` | uppercase}} </th>
                     <th>{{`Role` | uppercase}} </th>
+                    <th>{{`Profile Image` | uppercase}}</th>
                     <th>{{`Action` |uppercase}}</th>
                 </tr>
             </thead>
@@ -86,6 +131,9 @@
                     <td>{{user.email}}</td>
                     <td>{{user.name | titlecase}}</td>
                     <td>{{user.role | titlecase}}</td>
+                    <td>
+                      <img class="profile-img" [src]="user.profileImage" [alt]="user.name" />
+                    </td>
                     <td>
                         <button class="action-btn" (click)="onEdit(user)">Edit</button>
                         <button class="action-btn delete" (click)="onDeleteUser(user._id)">Delete</button>

@@ -69,3 +69,9 @@ button{
 button:hover{
     background-color:#333333;
 }
+.text-danger {
+    color: #dc3545;
+    font-size: 14px; 
+    font-weight: 500;
+    margin-top: 4px;
+}

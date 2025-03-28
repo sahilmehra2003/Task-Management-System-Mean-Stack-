@@ -6,7 +6,7 @@ const cors=require('cors');
 const userRoutes=require('./routes/user.routes');
 const notification_routes=require('./routes/notification.routes');
 const todoroutes=require('./routes/todo.routes');
-
+const cloudinary=require('./config/cloudinary');
 // middleware
 app.use(cors(
     {
@@ -18,8 +18,9 @@ app.use(express.json());
 require('dotenv').config()
 
 
-// database connection
+// database & cloudinary connection
 require('./config/database').dbConnect()
+cloudinary.cloiudinaryConnect();
 
 // routes
 app.use('/api/v1/user',userRoutes);

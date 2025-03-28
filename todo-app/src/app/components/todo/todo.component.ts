@@ -31,6 +31,7 @@ export class TodoComponent implements OnInit{
         _id:"",
         name:''
       },
+      adminComment:'',
       summary: '',
       dueDate: '',
       completed: false,
@@ -50,6 +51,7 @@ export class TodoComponent implements OnInit{
     // this.role=localStorage.getItem('role') || 'user';
     if (this.user.role==='admin') {
       this.userData=route.snapshot.data?.['userList']
+      this.usersrvc.getUsers()
     }
     
    
@@ -230,8 +232,20 @@ export class TodoComponent implements OnInit{
 }
 
   updateTodo(todo:Todo){
-       console.log(todo);
-       this.dateFormat=new Date(todo.dueDate).toISOString().split('T')[0]
+      //  console.log(todo);
+      if (this.user.role==="admin") {
+         if (todo.adminComment) {
+            this.todoService.updateTodo(todo).subscribe((res:any)=>{
+              if (res.success) {
+                console.log("reached here")
+                 this.notifysrvc.createNotification({title:"Admin added Comment",message:"Admin added comment, review it",userId:todo.userId._id}).subscribe((res:any)=>{
+                     alert("Notification created for user");
+                 })
+              }
+            })
+         }
+      }else{
+        this.dateFormat=new Date(todo.dueDate).toISOString().split('T')[0]
        this.todoService.updateTodo(todo).subscribe((res)=>{
         if (res) {
           alert("Todo data updated successfully");
@@ -247,16 +261,18 @@ export class TodoComponent implements OnInit{
             dueDate: '',
             completed: false,
           }
-          const updatedTodos = this.todos.map(t => 
-            t._id === todo._id ? { ...t, editing: false } : t
-          );
-    
-          this.todos = [...updatedTodos];
          
         }else{
           alert("Error in updating todo");
         }
        })
+      }
+      const updatedTodos = this.todos.map(t => 
+        t._id === todo._id ? { ...t, editing: false } : t
+      );
+
+      this.todos = [...updatedTodos];
+       
   }
   updateTodoStatus(todo: Todo) {
     const updatedTodo = { ...todo };

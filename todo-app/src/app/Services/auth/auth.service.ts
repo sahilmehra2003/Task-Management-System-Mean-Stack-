@@ -11,7 +11,6 @@ export class AuthService {
   constructor(private http:HttpClient) { 
   }
   signup(userData:any):Observable<any>{
-      console.log(`${this.apiUrl}${API_ENDPOINTS.AUTH.SIGNUP}`)
       return this.http.post(`${this.apiUrl}${API_ENDPOINTS.AUTH.SIGNUP}`,userData);
   }
   login(userObj:any):Observable<any>{
@@ -19,6 +18,7 @@ export class AuthService {
     
   }
   logout():void{
+    localStorage.clear();
     this.http.post(`${this.apiUrl}${API_ENDPOINTS.AUTH.LOGOUT}`,{});
   }
 }

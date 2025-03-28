@@ -1,14 +1,36 @@
 const express=require('express');
 const router=express.Router();
-const {registerUser,loginUser,logoutUser,updateUser,fetchUsers,deleteUser,adminCreateUser}=require('../controller/user.controller');
+const {registerUser,loginUser,logoutUser,updateUser,fetchUsers,deleteUser,adminCreateUser, fetchUserById}=require('../controller/user.controller');
 const { verifyJwt,verifyAdmin } = require('../middleware/auth.middleware');
-
-router.post('/signup',registerUser);
+const upload=require('../middleware/multer.middleware')
+router.post('/signup',
+     upload.fields([
+        {
+            name:'profileImage',
+            maxCount:1
+        }
+     ])
+    ,registerUser);
 router.post('/login',loginUser);
 router.post('/logout',verifyJwt,logoutUser);
-router.post('/admincreateuser',verifyJwt,verifyAdmin,adminCreateUser)
+router.post('/admincreateuser',verifyJwt,verifyAdmin,
+    upload.fields([
+        {
+            name:'profileImage',
+            maxCount:1
+        }
+     ])
+    ,adminCreateUser)
 router.get('/getusers',verifyJwt,verifyAdmin,fetchUsers);
-router.put('/updateuserdetails/:id',verifyJwt,verifyAdmin,updateUser);
+router.get('/getuserbyid/:id',fetchUserById);
+router.put('/updateuserdetails/:id',verifyJwt,verifyAdmin,
+     upload.fields([
+        {
+            name:'profileImage',
+            maxCount:1
+        }
+     ])
+    ,updateUser);
 router.delete('/deleteuser/:id',verifyJwt,verifyAdmin,deleteUser);
 
 

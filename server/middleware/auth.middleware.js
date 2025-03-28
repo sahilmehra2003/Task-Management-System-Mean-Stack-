@@ -4,7 +4,7 @@ const User=require('../models/user.model')
 exports.verifyJwt=async(req,res,next)=>{
     try {
         const token=req.cookies?.token || req.header("Authorization")?.replace("Bearer ","");
-        console.log("token:", token);
+        // console.log("token:", token);
         const payload=jwt.verify(token,process.env.SECRET);
         // console.log(payload);
         const authorizedUser=await User.findById(payload?.id).select("-password -token")

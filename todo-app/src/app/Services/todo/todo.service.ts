@@ -21,7 +21,7 @@ export class TodoService {
      return this.http.get<Todo[]>(`${this.apiUrl}${API_ENDPOINTS.TODOS.GET_BY_ID}`)
   }
   addTodo(todo: Omit<Todo, '_id'>): Observable<Todo> {
-    console.log("todo",todo)
+    // console.log("todo",todo)
     return this.http.post<Todo>(`${this.apiUrl}${API_ENDPOINTS.TODOS.CREATE}`, {...todo,userId:todo.userId});
   }
 
