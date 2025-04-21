@@ -1,0 +1,162 @@
+/* Parent Container */
+.parent {
+    width: 100%;
+    height:600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Light gray background */
+}
+
+/* Profile Container */
+.profile-container {
+    width: 420px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    position: relative;
+}
+
+/* Profile Image */
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
+    transition: transform 0.3s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+}
+
+/* Header Container */
+.container-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* Profile Info */
+.profile-info {
+    text-align: left;
+    padding: 10px 0;
+}
+
+.profile-info p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Buttons */
+.profile-btn, .verify-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.profile-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.profile-btn:hover {
+    background-color: #218838;
+}
+
+.verify-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+.verify-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Modal */
+.modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 100;
+}
+
+/* Show Modal */
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.close:hover {
+    color: red;
+}
+
+/* File Input Styling */
+.modal-content input[type="file"] {
+    margin: 15px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+/* Upload Button */
+.modal-content button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}

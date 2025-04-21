@@ -1,0 +1,1 @@
+export const imageUrl:string='https://imgs.search.brave.com/i8a44KjqHNI-fEXN2bJCoK3iOG8zUUmnm6aWglJ5m7A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/ZHJpYmJibGUuY29t/L3VzZXJ1cGxvYWQv/MTk3MDM2MDgvZmls/ZS9vcmlnaW5hbC0z/MDIyYzIxYTg1ZmEz/ZjhkOGE0ZmQyNzdl/Y2U3NDRkOC5qcGc_/cmVzaXplPTQwMHgw'

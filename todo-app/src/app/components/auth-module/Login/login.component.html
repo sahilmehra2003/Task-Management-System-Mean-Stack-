@@ -1,0 +1,89 @@
+<div class="login-form">
+  <div class="form-container">
+    <div class="login-header">
+      <h2>User Login Form</h2>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+      <!-- Email Field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          placeholder="Enter your Email"
+          type="email"
+          id="email"
+          #email="ngModel"
+          [(ngModel)]="userObj.email"
+          name="email"
+          required
+        />
+        <mat-error *ngIf="email.invalid && (email.touched || email.dirty)">
+          <ng-container *ngIf="email.hasError('required')">
+            * This is a required field
+          </ng-container>
+          <ng-container *ngIf="email.hasError('pattern')">
+            * Invalid email format
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password Field -->
+      <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            name="password"
+            #password="ngModel"
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            [(ngModel)]="userObj.password"
+            placeholder="PASSWORD"
+            minlength="8"
+            required
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+            type="button"
+          >
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        <mat-error *ngIf="password.invalid && (password.touched || password.dirty)">
+          <ng-container *ngIf="password.hasError('required')">
+            * This is a required field
+          </ng-container>
+          <ng-container *ngIf="password.hasError('minlength')">
+            * Password should have at least 8 characters
+          </ng-container>
+          <ng-container *ngIf="password.hasError('pattern') && !password.hasError('minlength')">
+            Password must include: <br />
+            1) Lowercase letter <br />
+            2) Uppercase letter <br />
+            3) Digit <br />
+            4) Special character
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+      <div class="form-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loginForm.invalid || isSubmitted"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+
+    <div class="redirect">
+      Not registered yet?
+      <a routerLink="/auth/signup">Register</a>
+    </div>
+  </div>
+</div>
+

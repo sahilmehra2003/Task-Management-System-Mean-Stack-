@@ -16,11 +16,11 @@ const notificationSchema=new Schema({
      type:Boolean,
      default:false
    },
-   userId:{
+   userIds:[{
      type:Schema.Types.ObjectId,
      ref:'User',
      required:true
-   }
+   }]
 },{timestamps:true})
 
 const Notification=model("Notification",notificationSchema);

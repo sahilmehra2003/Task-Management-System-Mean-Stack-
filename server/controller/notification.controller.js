@@ -1,39 +1,41 @@
+const { default: mongoose } = require('mongoose');
+const { sendNotifications } = require('../helper/sendNotifications');
 const Notification=require('../models/notification.model');
 const User = require('../models/user.model');
 
 exports.createNotification=async(req,res)=>{
     try {
-        const {title,message,userId}=req.body;
-        if (!title || !message || !userId) {
+        
+        const {title,message,userIds}=req.body;
+        if (!title || !message || !userIds || userIds.length===0) {
             return res.status(400).json({
                 success:false,
                 message:"Fill all the fields required to create notification!", 
              })
         }
-       
-       if (!userId) {
+        const newUserIds=userIds.map((userId)=>new mongoose.Types.ObjectId(userId))
+       if (!userIds) {
           return res.status(404).json({
              success:false,
              message:"UserId is required to create notification", 
           })
        } 
-       const notifieduser=await User.findOneAndUpdate(
-                                             {_id:userId},
-                                             {$inc:{notification_count:1}},{new:true}).select("-password -token"); //increasing notification count by one
-       const newNotification=await Notification.create({
-                title,
-                message,
-                userId
+       const result=await sendNotifications({
+              title,
+              message,
+              userIds:newUserIds
        })
-       if(!newNotification){
+       
+       if(!result){
         return res.status(404).json({
             success:false,
             message:"Error in  creating new notification", 
          })
        }
+    //    console.log(result);
        return res.status(200).json({
            success:true,
-           data:{newNotification,notifieduser},
+           data:result,
            message:"New notification created successfully"
        })
     } catch (error) {
@@ -47,39 +49,33 @@ exports.createNotification=async(req,res)=>{
 
 exports.updateNotification=async(req,res)=>{
     try {
-       const userId=req.user.id 
        const {id}=req.params;
-       if (!id || !userId) {
+       const userId = req.user.id;
+       if (!id) {
           return res.status(404).json({
              success:false,
-             message:"Id or userID not found to delete notification!"
+             message:"Id not found to mark notification read!"
           })
        }
-    //    const deletedNotification=await Notification.findByIdAndDelete(id,{new:true});
-    //    if (!deletedNotification) {
-    //       return res.status(403).json({
-    //          success:false,
-    //          message:"Error in deleting notification,invalid notification id"
-    //       })
-    //    }
-       const updateUser=await User.findByIdAndUpdate(
-        userId,{
-           $inc:{
-            notification_count:-1
-           },
-           
-       },{
-        new:true
-       })
+       const notificationToUpdate = await Notification.findById(id).lean();
+       if (!notificationToUpdate) {
+        return res.status(404).json({ success: false, message: "Notification not found." });
+       }
+       const isRecipient = notificationToUpdate.userIds.some(recipientId => recipientId === userId);
+       if (!isRecipient) {
+        return res.status(403).json({ success: false, message: "Forbidden: You cannot modify this notification." });
+       }
+       
+       const updatedNotification=await Notification.findByIdAndUpdate(id,{isRead:true},{new:true});
        return res.status(200).json({
           success:true,
           message:"Notifiaction read", 
-          data:updateUser
+          data:updatedNotification
        })
     } catch (error) {
         return res.status(500).json({
             success:false,
-            message:"Server Error in reducing notification count",
+            message:"Server Error in marking notification read",
             error:error.message
         }) 
     }
@@ -87,15 +83,21 @@ exports.updateNotification=async(req,res)=>{
 
 exports.fetchNotificationByUserId=async(req,res)=>{
     try {
-        const {id}=req.params
-        if (!id) {
+        const userId=req.user.id
+        
+        if (!userId) {
             return res.status(404).json({
                 success:false,
                 message:"user id not found for fetching notification"
             })
         }
+        const newUserId=new mongoose.Types.ObjectId(userId)
         // console.log(userId);
-        const fetchedNotification=await Notification.find({userId:id});
+        const fetchedNotification=await Notification.find(
+            {
+                userIds:newUserId
+            },
+        );
         // console.log(fetchedNotification)
         if (!fetchedNotification ) {
             return res.status(403).json({
@@ -115,4 +117,22 @@ exports.fetchNotificationByUserId=async(req,res)=>{
             error:error.message
         }) 
     }
+}
+exports.unreadNotificationCount=async(req,res)=>{
+    const userId=req.user.id;
+    if (!userId) {
+        return res.status(400).json({
+            success:false,
+            message:'No userId found'
+        })
+    }
+    const unreadCount=await Notification.countDocuments({
+        userIds:userId,
+        isRead:false,
+    })  
+    return res.status(200).json({
+        success:true,
+        message:`Unread notification count is ${unreadCount}`,
+        data:unreadCount
+    })
 }

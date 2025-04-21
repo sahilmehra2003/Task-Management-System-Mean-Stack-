@@ -1,7 +1,6 @@
 const {Schema,model}=require('mongoose');
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken');
-const { string } = require('joi');
 require('dotenv').config()
 const userSchema=new Schema({
    name:{
@@ -26,12 +25,15 @@ const userSchema=new Schema({
     required:true,
     default:"user",
    },
-   notification_count:{
-     type:Number,
-     default:0
-   },
    profileImage:{
      type:String,
+   },
+   otp:{
+    type:Number,
+   },
+   isVerified:{
+    type:Boolean,
+    default:false
    }
 })
 userSchema.pre('save',async function (next) {

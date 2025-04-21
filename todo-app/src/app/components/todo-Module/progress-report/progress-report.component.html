@@ -1,0 +1,44 @@
+
+<div class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ selectedTodo.title | titlecase }}</h2>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      <div class="selectedTodo-details">
+        <p><strong>Summary:</strong> {{ selectedTodo.summary }}</p>
+        <p><strong>Due Date:</strong> {{ selectedTodo.dueDate | date }}</p>
+        <p><strong>Status:</strong> <span [ngClass]="{'completed': selectedTodo.isCompleted, 'pending': !selectedTodo.isCompleted}">
+          {{ selectedTodo.isCompleted ? 'Completed' : 'Pending' }}
+        </span></p>
+      </div>
+  
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <h3>Comments</h3>
+        <div *ngFor="let comment of mentionedComments" class="comment">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.createdBy.name }}</span>
+            <span class="comment-type" [ngClass]="{'admin-comment': comment.isAdminComment}">
+              {{ comment.isAdminComment ? 'Admin Comment' : 'User Comment' }}
+            </span>
+          </div>
+          <p class="comment-text">{{ comment.commentText }}</p>
+          
+          <ng-container *ngIf="comment.mentions.length > 0; else noMentions">
+            <div class="mentions">
+              <strong>Mentions:</strong>
+              <span *ngFor="let mention of comment.mentions">{{ mention.name }}</span>
+            </div>
+          </ng-container>
+          
+          <ng-template #noMentions>
+            <div class="mentions">
+              <p>No mentions</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+

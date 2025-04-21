@@ -1,0 +1,97 @@
+<div class="dialog-overlay">
+  <div class="dialog" [ngClass]="{ 'edit-mode': isEditing, 'create-mode': !isEditing }">
+    <h2>{{ isEditing ? 'Edit User' : 'Create New User' }}</h2>
+
+    <form class="dialog-form" [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+      
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error *ngIf="adminForm.controls['name'].hasError('required')">
+          * This is a required field
+        </mat-error>
+        <mat-error *ngIf="adminForm.controls['name'].hasError('minlength')">
+          * Name should be at least 3 characters
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required>
+        <mat-error *ngIf="adminForm.controls['email'].hasError('required')">
+          * This is a required field
+        </mat-error>
+        <mat-error *ngIf="adminForm.controls['email'].hasError('email')">
+          * Please enter a valid email.
+        </mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="!isEditing">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput  [type]="hide ? 'password' : 'text'" formControlName="password" required>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+            type="button"
+          >
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="adminForm.controls['password'].hasError('required')">
+            * This is a required field
+          </mat-error>
+          <mat-error *ngIf="adminForm.controls['password'].hasError('minlength')">
+            * Password should be at least 8 characters
+          </mat-error>
+          <mat-error *ngIf="adminForm.controls['password'].hasError('pattern') && !adminForm.controls['password'].hasError('minlength')">
+             One lowercase letter,
+             One uppercase letter,
+             One digit,
+             One special character
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngIf="isLoggedInUserAdmin && canEditRole">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="admin">Admin</mat-option>
+          <mat-option value="user">User</mat-option>
+        </mat-select>
+        <mat-error *ngIf="adminForm.controls['role'].hasError('required')">
+          * This is a required field
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <div class="form-group">
+      <label>Profile Image:</label>
+      <div class="custom-file-input">
+        <input
+          type="file"
+          name="profileImage"
+          id="profileImage"
+          #file
+          (change)="onFileChange($event)"
+        />
+        <label for="profileImage">Choose Image</label>
+      </div>
+    </div>
+    
+      <div class="dialog-actions">
+        <button mat-button type="button" (click)="closeForm()" class="cancel-btn">Cancel</button>
+        <button id="edit-button" mat-raised-button color="primary" *ngIf="isEditing" [disabled]="adminForm.invalid" type="submit">
+          Save
+        </button>
+        <button mat-raised-button color="primary" *ngIf="!isEditing" type="submit" [disabled]="adminForm.invalid">
+          Add User
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

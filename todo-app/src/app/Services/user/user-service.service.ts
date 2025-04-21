@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../../components/users/userModel';
 import { environment } from '../../../environments/environment.development';
-import { API_ENDPOINTS } from '../../../environments/api-endpoints';
+import { API_ENDPOINTS } from '../../constant/api-endpoints';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,33 +10,22 @@ export class UserService{
   
    private apiUrl=environment.apiBaseUrl
   constructor(private http:HttpClient) {}
-  getUserById(id:any){
+  getUserById(id:string):Observable<any>{
     return this.http.get(`${this.apiUrl}${API_ENDPOINTS.USERS.GET_USER_BY_ID.replace(':id',id)}`)
   }
   getUsers(){
     return this.http.get(`${this.apiUrl}${API_ENDPOINTS.USERS.GET_ALL}`);
+    
   }
-  addNewUser(userData:any){
-    // console.log(`${this.apiUrl}${API_ENDPOINTS.USERS.ADMIN_CREATE_USER}`)
+  addNewUser(userData:FormData):Observable<any>{
     return this.http.post(`${this.apiUrl}${API_ENDPOINTS.USERS.ADMIN_CREATE_USER}`,userData);
   }
-  updateUser(userData: any) {
-    const id = userData.get('_id');
-    // console.log(id);
-    const user=new FormData();
-    for (const [key, value] of userData.entries()) {
-      if (key !== 'password') {
-          user.append(key, value);
-      }
-  }
-
-  // console.log([...user.entries()]); 
-
+  updateUser(id:string, userData: FormData):Observable<any>{
     const url = `${this.apiUrl}${API_ENDPOINTS.USERS.UPDATE.replace(':id', id)}`;
-    return this.http.put(url,user);
+    return this.http.put(url,userData);
 }
 
-  deleteUser(id:string){
+  deleteUser(id:string):Observable<any>{
     return this.http.delete(`${this.apiUrl}${API_ENDPOINTS.USERS.DELETE.replace(':id',id)}`);
   }
 }

@@ -1,36 +1,21 @@
 import { Routes } from '@angular/router';
-import { TodoComponent } from './components/todo/todo.component';
-import { LoginComponent } from './components/Login/login.component';
-import { authGuard } from './Guards/Auth Guard/auth-guard.guard';
-import { AdminComponent } from './components/admin/admin.component';
-import { UserResolver } from './resolvers/user.resolver';
-import { SignupComponent } from './components/signup/signup.component';
-import { notificationResolver } from './resolvers/notification.resolver';
 export const routes: Routes = [
     {
+        path:'auth',
+        loadChildren:()=>import('./components/auth-module/auth.module').then(m => m.AuthModule)
+    },
+    {
         path:'',
-        redirectTo:'signup',
+        redirectTo:'auth/login',
         pathMatch:'full'
     },
     {
-        path:'signup',
-        component:SignupComponent
+        path:'home',
+        loadChildren:()=>import('./components/Home/home.module').then(m=>m.HomeModule)
     },
     {
-        path:'todo',
-        component:TodoComponent,
-        canActivate:[authGuard],
-        resolve:{
-            userList:UserResolver
-        }
+        path:'**',
+        redirectTo:'auth/login',
     },
-    {
-        path:'login',
-        component:LoginComponent,     
-    },
-    {
-        path:'admin-page',
-        component:AdminComponent,
-        // resolve:{users:UserResolver}
-    }
+    
 ];

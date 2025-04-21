@@ -1,0 +1,66 @@
+ <div class="user-container">
+    <div class="heading">
+      <p class="sub-heading">  Welcome Admin {{currentUser?.name | titlecase }} </p>
+    </div>
+    @if(isDialogVisible){
+        <app-add-users [canEditRole]="canEditRole" [selectedUser]="selectedUser" [isEditing]="isEditing" (isUpdated)="refreshUserTable()"  (hideForm)="hideDialog($event)"/>
+      }
+      <div class="admin-div">
+        <button class="create-btn" (click)="showDialog(selectedUser)">Create New User</button>   
+      </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="userList" class="mat-table">
+
+      <ng-container matColumnDef="srNo">
+        <th mat-header-cell *matHeaderCellDef>Sr No. </th>
+        <td mat-cell *matCellDef="let user; let i = index">
+          <span>{{i+1}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let user">
+          <span>{{ user?.name | titlecase }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let user"> {{ user?.email }} </td>
+      </ng-container>
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role </th>
+        <td mat-cell *matCellDef="let user">{{user?.role | titlecase}}  </td>
+      </ng-container>
+      <ng-container matColumnDef="profileImage">
+        <th mat-header-cell *matHeaderCellDef> Profile Image </th>
+        <td mat-cell *matCellDef="let user">
+          <img [src]="user?.profileImage" [alt]="user?.name" class="avatar-img" />
+        </td>
+      </ng-container>
+      
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button [matMenuTriggerFor]="appMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #appMenu="matMenu">
+            @for(menu of menuItems;track $index){
+              <button mat-menu-item (click)="menu.action(user)">
+                <mat-icon>{{menu.icon}}</mat-icon>
+                {{menu.label}}
+              </button>
+            }
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr  mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
+    </table>
+    <mat-paginator [pageSizeOptions]="[3,4,5,6]" showFirstLastButtons aria-label="Select page of User List">
+    </mat-paginator>
+  </div>
+</div> 

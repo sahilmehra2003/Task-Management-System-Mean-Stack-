@@ -1,7 +1,7 @@
 const Joi=require('joi')
 
 
-const createValidationSchema=(fields)=>{
+const validationSchemaForUser=(fields)=>{
      const schema={}
      if (fields.includes('name')) {
         schema.name=Joi.string().min(3).lowercase().required()
@@ -40,9 +40,67 @@ const createValidationSchema=(fields)=>{
      }
      return Joi.object(schema).unknown(true);
 }
+const validateObjectId=Joi.string().hex().length(24).messages({
+    'string.base': `"{{#label}}" should be a type of 'text'`,
+    'string.hex': `"{{#label}}" must only contain hexadecimal characters`,
+    'string.length': `"{{#label}}" length must be 24 characters long`,
+    'any.required': `"{{#label}}" is a required field`
+});  // validating objectId from frontend they come as string
 
+const validationSchemaForTodo=(fields,isUpdate)=>{
+    const schema={};
+    if (isUpdate) {
+        if (fields.includes('title')) {
+            schema.title=Joi.string().min(3).lowercase().optional()
+        }
+        if (fields.includes('summary')) {
+            schema.summary=Joi.string().min(6).lowercase().optional()
+        }
+        if (fields.includes('dueDate')) {
+            schema.dueDate=Joi.date().min('now').optional() // due date cannot be less than currentdate
+        }
+    }else{
+        if (fields.includes('title')) {
+            schema.title=Joi.string().min(3).lowercase().required()
+        }
+        if (fields.includes('summary')) {
+            schema.summary=Joi.string().min(6).lowercase().required()
+        }
+        if (fields.includes('dueDate')) {
+            schema.dueDate=Joi.date().min('now').required() // due date cannot be less than currentdate
+        }
+    }
+    if(fields.includes('parentTodo')){
+        schema.parentTodo=validateObjectId.label('parentTodo').optional(); // in the request body they come as string
+    }
+    if(fields.includes('isCompleted')){
+        schema.isCompleted=Joi.boolean().optional();
+    }
+    if(fields.includes('progress')){
+        schema.progress=Joi.number().min(0).optional();
+    }
+    if(fields.includes('userId')){
+        schema.userId=validateObjectId.label('userId').optional();
+    }
+    if (fields.includes('members')) {
+        schema.members=Joi.array().items(validateObjectId.label('memberId')).optional();
+    }
+    if (fields.includes('subTodos')) {
+        schema.subTodos=Joi.array().items(validateObjectId.label('subTodo')).optional();
+    }
+    return Joi.object(schema);
+}
+
+const validateCommentSchema=Joi.object({
+  createdBy:validateObjectId.label('Created By').required(), // can get from user._id
+                commentText:Joi.string().trim().min(3).required(),
+                isDeleted:Joi.boolean().optional(),
+                isAdminComment:Joi.boolean().optional(),
+                mentions:Joi.array().items(validateObjectId.label('MentionId')).optional()
+}).required()
 
 module.exports={
-    createValidationSchema
-
+    validationSchemaForUser,
+    validationSchemaForTodo,
+    validateCommentSchema
 }

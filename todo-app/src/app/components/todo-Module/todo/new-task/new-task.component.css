@@ -1,0 +1,27 @@
+.dialog {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  /* Height controls */
+  min-height: 420px; /* Default height */
+  max-height: 90vh;
+  /* overflow-y: auto; */
+}
+.full-width {
+  width: 100%;
+}
+.form-group {
+  margin-bottom: 10px;
+}
+.dialog-overlay{
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+  
+
+

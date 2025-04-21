@@ -1,0 +1,101 @@
+/* Center the container */
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+  }
+  
+  /* Content box styling */
+  .content {
+    background-color: #ffffff;
+    width: 500px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Form title */
+  .form-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Style all mat-form-fields to be full-width */
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  /* Material input field appearance */
+  input.mat-input-element {
+    padding: 8px 0;
+  }
+  
+  /* Validation error message styling */
+  .text-danger,
+  mat-error {
+    color: #dc3545;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  
+  /* Buttons */
+  button {
+    height: 40px;
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  button:hover {
+    background-color: #317dce;
+    color: white;
+    transition: background-color 0.6s ease-in-out;
+  }
+  
+  .redirect {
+    font-weight: 500;
+    font-size: 18px;
+    margin-top: 20px;
+    text-align: center;
+}
+.redirect a{
+    color: #007bff;
+    text-decoration: none;
+}
+  
+  
+  mat-icon {
+    cursor: pointer;
+  }
+  button[disabled] {
+    background-color: #cccccc !important;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 600px) {
+    .content {
+      width: 90%;
+      padding: 16px;
+    }
+  
+    .form-title {
+      font-size: 20px;
+    }
+  
+    button {
+      font-size: 14px;
+    }
+  }
+  
+ 

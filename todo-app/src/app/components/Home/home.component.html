@@ -1,0 +1,36 @@
+<nav class="navbar">
+
+    <div class="logo-container">
+        <img class="logo"
+            [src]="imageUrl"
+            alt="Task Management App" />
+    </div>
+
+
+    <ul class="nav-links">
+        <li *ngFor="let item of items">
+            <a mat-button routerLink="{{item.routerLink}}">{{item.label}}</a>
+        </li>
+    </ul>
+
+
+    <div class="user-container">
+        <div class="user-info">
+            <p>Welcome, {{currentUser?.name | titlecase}}</p>
+            <app-notification (isVisible)="viewNotifications($event)"/>
+        </div>
+        <button mat-button [matMenuTriggerFor]="avatarMenu" [matMenuTriggerData]="{ user: currentUser }"
+            matMenuPositionX="after" matMenuPositionY="below" class="avatar-btn">
+            <img [src]="currentUser?.profileImage" [alt]="currentUser?.name" class="avatar" />
+        </button>
+        <mat-menu #avatarMenu="matMenu" class="menu-box">
+            @for(menu of menuItems;track $index){
+            <button mat-menu-item (click)="menu.action()">
+                <mat-icon class="mr-2">{{menu.icon}}</mat-icon>
+                {{menu.label}}</button>
+            }
+        </mat-menu>
+        
+    </div>
+</nav>
+<router-outlet></router-outlet>

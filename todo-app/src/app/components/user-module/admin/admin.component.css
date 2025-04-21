@@ -1,0 +1,64 @@
+.user-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 25px; 
+    overflow-y: auto;
+    max-height: 540px;
+}
+.heading{
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items:start;
+}
+.admin-div{
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+    padding-inline: 50px;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+::ng-deep button[mat-icon-button] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    cursor: pointer;
+  }
+.create-btn {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.text-danger {
+    color: #dc3545;
+    font-size: 14px; 
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.sub-heading{
+    padding-left: 44%;
+    margin-block: 6px;
+}
+.avatar-img {
+    width: 80px;  
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    margin-block: 6px;
+  }

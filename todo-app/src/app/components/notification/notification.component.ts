@@ -1,15 +1,17 @@
 // notification.component.ts
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter,OnDestroy,OnInit, Output } from '@angular/core';
 import { NotificationService } from '../../Services/notification/notification.service';
 import { CommonModule, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { User } from '../users/userModel';
+import { User } from '../user-module/users/userModel';
 import { Notification } from './notification.model';
 import { Observable } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-notification',
+  standalone:true,
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css'],
-  imports:[CommonModule,DatePipe,NgClass,NgIf,NgFor]
+  imports:[CommonModule,DatePipe,NgClass,NgIf,NgFor,MatIcon]
 })
 export class NotificationComponent implements OnInit {
   notifications: any[] = [];
@@ -17,19 +19,21 @@ export class NotificationComponent implements OnInit {
   user:User=JSON.parse(localStorage.getItem('user')!)
   notificationCount$!: Observable<number>;
   @Output() isVisible:EventEmitter <boolean>=new EventEmitter<boolean>()
-  readClass:string='unread'
   constructor(private notificationService: NotificationService) {}
   
   toggleDropdown() {
     this.isDropDownVisible = !this.isDropDownVisible;
     this.isVisible.emit(this.isDropDownVisible); 
-    // console.log("is dropDown vusu" ,this.isDropDownVisible)
+    this.notificationService.fetchNotifications();
   }
-  get hasUnreadNotifications(): Notification[] {
-    // console.log(this.notifications.filter(notification => !notification.isRead));
-    return this.notifications.filter(notification => !notification.isRead);
-  }
+  // get hasUnreadNotifications(): Notification[] {
+  //   // console.log(this.notifications.filter(notification => !notification.isRead));
+  //   return this.notifications.filter(notification => !notification.isRead);
+  // }
+
+ 
   ngOnInit(): void {
+
     this.notificationCount$=this.notificationService.notificationCount$
     this.notificationService.initializeNotificationCount();
 
@@ -39,18 +43,17 @@ export class NotificationComponent implements OnInit {
 
     if (this.user) {
 
-      this.notificationService.fetchNotifications(this.user._id); 
+      this.notificationService.fetchNotifications(); 
     }
   }
   
-  markAsRead(notificationId: string): void {
-    this.notificationService.markAsRead(notificationId).subscribe((res:any) => {
+  markAsRead(notification: any): void {
+    if(notification.isRead=true) return;
+    this.notificationService.markAsRead(notification._id).subscribe((res:any) => {
       if (res.success) {
         console.log(res.data)
-        this.readClass="read"
+        notification.isRead=true;
       }
-      console.log("user in mark as read",this.user);
-      this.notificationService.fetchNotifications(this.user._id);
     });
   }
 }

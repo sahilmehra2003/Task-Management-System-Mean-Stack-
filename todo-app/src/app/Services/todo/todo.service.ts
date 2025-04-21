@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Todo } from '../../components/todo/todo.model';
+import { Todo } from '../../components/todo-Module/todo/todo.model';
 import { environment } from '../../../environments/environment.development';
-import { API_ENDPOINTS } from '../../../environments/api-endpoints';
+import { API_ENDPOINTS } from '../../constant/api-endpoints';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,15 +17,18 @@ export class TodoService {
   }
   getTodosById(): Observable <Todo[]>{
     
-    console.log(`${this.apiUrl}${API_ENDPOINTS.TODOS.GET_BY_ID}`);
+    // console.log(`${this.apiUrl}${API_ENDPOINTS.TODOS.GET_BY_ID}`);
      return this.http.get<Todo[]>(`${this.apiUrl}${API_ENDPOINTS.TODOS.GET_BY_ID}`)
   }
-  addTodo(todo: Omit<Todo, '_id'>): Observable<Todo> {
+  getTodosByTodoId(id:string):Observable<Todo>{
+      return this.http.get<Todo>(this.apiUrl+API_ENDPOINTS.TODOS.GET_TODO_BY_ID.replace(':id',id));
+  }
+  addTodo(todo: Omit<any, '_id'>): Observable<any> {
     // console.log("todo",todo)
-    return this.http.post<Todo>(`${this.apiUrl}${API_ENDPOINTS.TODOS.CREATE}`, {...todo,userId:todo.userId});
+    return this.http.post<Todo>(`${this.apiUrl}${API_ENDPOINTS.TODOS.CREATE}`, todo);
   }
 
-  updateTodo(todo: Todo): Observable<Todo> {
+  updateTodo(todo:any): Observable<Todo> {
     return this.http.put<Todo>(`${this.apiUrl}${API_ENDPOINTS.TODOS.UPDATE.replace(':id',todo._id)}`, todo);
   }
 

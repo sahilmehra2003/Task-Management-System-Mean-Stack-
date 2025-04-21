@@ -1,11 +1,10 @@
 // notification.service.ts
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, } from 'rxjs';
 import { Notification } from '../../components/notification/notification.model';
 import { environment } from '../../../environments/environment.development';
-import { API_ENDPOINTS } from '../../../environments/api-endpoints';
-import { UserService } from '../user/user-service.service';
+import { API_ENDPOINTS } from '../../constant/api-endpoints';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,59 +14,70 @@ export class NotificationService {
   notifications$ = this.notificationSubject.asObservable();
   notificationCountSubject=new BehaviorSubject<number>(0);
   notificationCount$=this.notificationCountSubject.asObservable();
-  usersrvc=inject(UserService);
-  constructor(private http: HttpClient) {
-    //  this.fetchNotifications()
-   }
+  constructor(private http: HttpClient) {}
+
   initializeNotificationCount(): void {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-        const {notification_count}=JSON.parse(storedUser);
-        this.notificationCountSubject.next(notification_count || 0);
-    }
-}
-updateNotificationCount(newCount: number,user:any): void {
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-    const updatedUser = { ...JSON.parse(storedUser), notification_count: newCount };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-  }
-  this.notificationCountSubject.next(newCount);
-}
-
-  fetchNotifications(notificationId:string): void {
-    this.http.get<Notification[]>(`${this.apiUrl}${API_ENDPOINTS.NOTIFICATIONS.FETCH.replace(':id',notificationId)}`).subscribe((res:any) => {
-         this.notificationSubject.next(res?.data.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    this.fetchUnreadNotificationCount().subscribe({
+      next: (res) => {
+        const count = res?.data ?? 0; 
+        this.updateNotificationCount(count);
+      },
+      error: (err) => {
+        console.error('Failed to fetch unread notification count', err);
+        this.updateNotificationCount(0); 
+      }
     });
-}
+  }
+  updateNotificationCount(newCount: number): void {
+    this.notificationCountSubject.next(newCount);
+  }
 
+//   fetchNotifications(): void {
+//     this.http.get<Notification[]>(this.apiUrl+API_ENDPOINTS.NOTIFICATIONS.FETCH).subscribe((res:any) => {
+//          this.notificationSubject.next(res?.data.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+//     });
+// }
+fetchNotifications(): void {
+  this.http.get<Notification[]>(this.apiUrl + API_ENDPOINTS.NOTIFICATIONS.FETCH).subscribe((res: any) => {
+    const sortedNotifications = res?.data.sort((a: { createdAt: string | number | Date,isRead:boolean }, b: { createdAt: string | number | Date,isRead:boolean }) => {
+      // Unread notifications first
+      if (a.isRead !== b.isRead) {
+        return a.isRead ? 1 : -1;
+      }
+
+      // Then sort by date descending
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+    this.notificationSubject.next(sortedNotifications);
+  });
+}
 
 markAsRead(notificationId: string): Observable<Notification> {
-  const storedUser = localStorage.getItem('user');
   return this.http
-    .put<Notification>(`${this.apiUrl}${API_ENDPOINTS.NOTIFICATIONS.UPDATE.replace(':id', notificationId)
-    }`,{})
+    .put<Notification>(`${this.apiUrl}${API_ENDPOINTS.NOTIFICATIONS.UPDATE.replace(':id', notificationId)}`, {})
     .pipe(
-      tap((res:any) => this.updateNotificationCount(res.data.notification_count,storedUser))
+      tap(() => {
+        this.fetchUnreadNotificationCount().subscribe({
+          next: (res) => {
+            const count = res?.data ?? 0;
+            this.updateNotificationCount(count);
+          },
+          error: () => {
+            this.updateNotificationCount(0);
+          }
+        });
+      })
     );
 }
+
 
 createNotification(notification: Omit<Notification, '_id'>): Observable<Notification> {
   return this.http
     .post<Notification>(`${this.apiUrl}${API_ENDPOINTS.NOTIFICATIONS.CREATE}`, notification)
-    .pipe(
-      switchMap((res: any) => 
-        this.usersrvc.getUserById(notification.userId)
-          .pipe(
-            tap((user:any) => {
-              // console.log("Notification sent :",res.data); 
-              // console.log(`Notification sent to: ${user.name}`); 
-              // console.log(res.data.notifieduser.notification_count,user.data)
-              this.updateNotificationCount(res.data.notifieduser.notification_count,user.data);
-            })
-          )
-      )
-    );
+}
+fetchUnreadNotificationCount():Observable<any>{
+  return this.http.get<any>(`${this.apiUrl}${API_ENDPOINTS.NOTIFICATIONS.FETCHUNREADNOTIFICATION}`);
 }
 
 }

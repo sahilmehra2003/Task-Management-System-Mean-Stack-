@@ -1,29 +1,34 @@
 <div class="notification-container">
-    <div class="notification-icon" 
-         [ngClass]="{'active': isDropDownVisible}"  
-         (click)="toggleDropdown()">
-        <i class="fas fa-bell"></i>
-        <span id="notification-count" class="badge">{{notificationCount$ | async}}</span>
-    </div>
+  <div
+    class="notification-icon"
+    [ngClass]="{ active: isDropDownVisible }"
+    (click)="toggleDropdown()"
+  >
+    <mat-icon>notifications</mat-icon>
+    <span id="notification-count" class="badge">{{
+      notificationCount$ | async
+    }}</span>
+  </div>
 
-    <div id="notification-dropdown"  
-         [ngClass]="{'active': isDropDownVisible}"  
-         class="dropdown" 
-         *ngIf="isDropDownVisible">
+  <div
+    id="notification-dropdown"
+    [ngClass]="{ active: isDropDownVisible }"
+    class="dropdown"
+    *ngIf="isDropDownVisible"
+  >
+    <p *ngIf="notifications.length === 0">No new notifications</p>
 
-         <p *ngIf="hasUnreadNotifications.length === 0">
-            No new notifications
-        </p>
-        
-        <ul id="notification-list" *ngIf="hasUnreadNotifications.length > 0">
-            <li *ngFor="let notification of hasUnreadNotifications" 
-                (click)="markAsRead(notification._id)" 
-                class="notification" 
-                [ngClass]="readClass">
-                 <p>{{notification.title}}</p>
-                <p>{{notification.message}}</p>
-                <p>{{notification.createdAt | date:'dd-MM-yyyy hh:mm'}}</p>
-            </li>
-        </ul>
-    </div>
+    <ul id="notification-list" *ngIf="notifications.length > 0">
+      <li
+        *ngFor="let notification of notifications"
+        (click)="markAsRead(notification)"
+        class="notification"
+        [ngClass]="notification.isRead ? 'read':'unread'"
+      >
+        <p>{{ notification.title  |titlecase}}</p>
+        <p>{{ notification.message }}</p>
+        <p>{{ notification.createdAt | date : "dd-MM-yyyy hh:mm" }}</p>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -1,0 +1,75 @@
+<div class="dialog-overlay">
+    <div class="dialog">
+      @if(isEditing){
+        <h2>Edit Todo</h2>
+      }@else {
+        <h2>Create New Todo</h2>
+      }
+      <form (ngSubmit)="addTodo()" #todoForm="ngForm" class="dialog-form">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" [(ngModel)]="newTodoObj.title" name="title" required class="todo-input">
+        </div>
+
+        <div class="form-group">
+          <label for="summary">Summary</label>
+          <textarea id="summary" [(ngModel)]="newTodoObj.summary" name="summary" required
+            class="todo-input textarea"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="dueDate">Due Date</label>
+          <input type="date" [min]="currentDate" onkeydown="return false" [max]="maxDate" id="dueDate"
+            [(ngModel)]="newTodoObj.dueDate" name="dueDate" required class="todo-input">
+        </div>
+        @if(loggedInUser?.role === "admin"  && !isEditing) {
+        <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Choose Owner</mat-label>
+                <mat-select
+                  [(ngModel)]="newTodoObj.userId._id"
+                  name="owner"
+                  id="owner"
+                  (selectionChange)="changeUserList($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <mat-option
+                    [value]="loggedInUser?._id"
+                    selected
+                  >
+                    {{ loggedInUser?.name }}
+                  </mat-option>
+                  @for(user of userData;track user._id){
+                    <mat-option [value]="user._id">
+                        {{ user.name }}
+                      </mat-option>
+                  }
+                  
+                </mat-select>
+              </mat-form-field>
+        </div>   
+        <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Assign  Users</mat-label>
+                <mat-select [(ngModel)]="selectedUser" multiple [ngModelOptions]="{standalone: true}" >
+                  @for(user of userList;track user._id){
+                    <mat-option [value]="user._id">
+                        {{ user.name }}
+                  </mat-option>
+                  }     
+                </mat-select>
+            </mat-form-field>
+           
+        </div>
+    }
+        <div class="dialog-actions">
+          <button type="button" (click)="hideDialog()" class="btn cancel-btn">Cancel</button>
+          @if(isEditing){
+            <button type="button" (click)="updateTodo()" [disabled]="!todoForm.form.valid" class="btn add-btn">Save</button>
+          }@else {
+            <button type="submit" [disabled]="!todoForm.form.valid" class="btn add-btn">Add Todo</button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
