@@ -81,12 +81,17 @@ export class AuthService {
   verifyOtp(userData:any):Observable<any>{
        return this.http.post(this.apiUrl+API_ENDPOINTS.AUTH.VERIFY_OTP,{email:userData.email,otp:userData.otp})
   }
+  forgotPassword(email:string):Observable<any>{
+       return this.http.post(this.apiUrl+API_ENDPOINTS.AUTH.FORGOT_PASSWORD,{email:email});
+  }
+  updatePassword(token:string ,password:string,confirmPassword:string):Observable<any>{
+       return this.http.patch(`${this.apiUrl}${API_ENDPOINTS.AUTH.RESET_PASSWORD.replace(':token',token)}`,{password:password,confirmPassword:confirmPassword})
+  }
   signup(userData:any):Observable<any>{
       return this.http.post(`${this.apiUrl}${API_ENDPOINTS.AUTH.SIGNUP}`,userData);
   }
   login(userObj:any):Observable<any>{
       return this.http.post(`${this.apiUrl}${API_ENDPOINTS.AUTH.LOGIN}`,userObj)
-    
   }
   logout():void{
     this.currentUserId=null;

@@ -4,6 +4,7 @@ import { authGuard } from "../../Guards/Auth Guard/auth-guard.guard";
 import { TodoResolver } from "../../resolvers/todo.resolver";
 import { UserResolver } from "../../resolvers/user.resolver";
 import { HomeComponent } from "./home.component";
+import { UserUpdatePasswordComponent } from "../Password-change/user-update-password/user-update-password.component";
 
 
 
@@ -35,7 +36,13 @@ export const homeRoutes:Routes=[
             {
                 path:'user',
                 loadComponent:()=>import('../user-module/users/users.component').then(m=>m.UsersComponent),
-                resolve:{users:UserResolver}
+                resolve:{users:UserResolver},
+                children:[
+                    {
+                        path:'user-update-password',
+                        component:UserUpdatePasswordComponent
+                    }
+                ]
             }
 
         ]

@@ -1,6 +1,6 @@
 const Joi=require('joi')
 
-
+//  FOR USER
 const validationSchemaForUser=(fields)=>{
      const schema={}
      if (fields.includes('name')) {
@@ -40,6 +40,41 @@ const validationSchemaForUser=(fields)=>{
      }
      return Joi.object(schema).unknown(true);
 }
+
+
+// UPDATE USER PASSWORD SCHEMA VALIDATION
+const updatePasswordSchema = Joi.object({
+    currentPassword: Joi.string()
+        .required()
+        .label('Current Password')
+        .messages({ 
+            'string.empty': `"Current Password" cannot be empty`,
+            'any.required': `"Current Password" is a required field`
+        }),
+    newPassword: Joi.string()
+        .min(8)
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/) // Use regex literal
+        .required()
+        .label('New Password')
+        .messages({ // Custom messages
+            'string.empty': `"New Password" cannot be empty`,
+            'string.min': `"New Password" should have a minimum length of {#limit}`,
+            'string.pattern.base': `"New Password" must contain uppercase, lowercase, number, and special character`,
+            'any.required': `"New Password" is a required field`
+        }),
+    confirmNewPassord:Joi.string()
+               .required()
+               .label('confirmNewPassword')
+               .messages({ 
+                'string.empty': `"Confirm New Password" cannot be empty`,
+                'any.required': `"Confirm New Password" is a required field`
+            })    
+});
+
+
+
+
+// FOR TODOS
 const validateObjectId=Joi.string().hex().length(24).messages({
     'string.base': `"{{#label}}" should be a type of 'text'`,
     'string.hex': `"{{#label}}" must only contain hexadecimal characters`,
@@ -102,5 +137,6 @@ const validateCommentSchema=Joi.object({
 module.exports={
     validationSchemaForUser,
     validationSchemaForTodo,
-    validateCommentSchema
+    validateCommentSchema,
+    updatePasswordSchema
 }

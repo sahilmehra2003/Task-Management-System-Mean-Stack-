@@ -54,9 +54,9 @@
 }
 
 /* Buttons */
-.profile-btn, .verify-btn {
+.profile-btn, .update-btn {
     display: block;
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     margin-top: 12px;
     font-size: 16px;
@@ -67,22 +67,30 @@
     transition: background 0.3s ease;
 }
 
+
 .profile-btn {
     background-color: #28a745;
     color: white;
+}
+
+.profile-btns{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .profile-btn:hover {
     background-color: #218838;
 }
 
-.verify-btn {
-    background-color: #ffc107;
-    color: black;
+.update-btn {
+    background-color: #e4b119;
+    color: whitesmoke;
 }
 
-.verify-btn:hover {
-    background-color: #e0a800;
+.update-btn:hover {
+    background-color: #f6bc10;
 }
 
 /* Modal */

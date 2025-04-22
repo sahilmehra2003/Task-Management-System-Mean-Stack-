@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {  updateUser, fetchUsers, deleteUser, adminCreateUser, fetchUserById,editProfileImage } = require('../controller/user.controller');
+const {  updateUser, fetchUsers, deleteUser, adminCreateUser, fetchUserById,editProfileImage,updatePassword } = require('../controller/user.controller');
 const { verifyJwt, verifyAdmin } = require('../middleware/auth.middleware');
 const upload = require('../middleware/multer.middleware')
 const { PERMISSIONS } = require('../config/permission')
@@ -19,6 +19,7 @@ router.get('/getusers', verifyJwt, verifyAdmin, checkPermission(PERMISSIONS.READ
 router.get('/getuserbyid/:id', fetchUserById);
 router.put('/updateuserdetails/:id', verifyJwt, checkPermission(PERMISSIONS.UPDATE_OWN_PROFILE), updateUser);
 router.delete('/deleteuser/:id', verifyJwt, verifyAdmin, checkPermission(PERMISSIONS.DELETE_ANY_USER), deleteUser);
+router.patch('/updateUserPassword',verifyJwt,updatePassword)
 router.patch('/updateprofileImage/:id', verifyJwt, checkPermission(PERMISSIONS.UPDATE_OWN_PROFILE),
     upload.fields([
         {

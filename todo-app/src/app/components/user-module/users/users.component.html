@@ -1,26 +1,29 @@
 <div class="parent">
-    <div class="profile-container">
-        <div class="container-header">
-            <img [src]="loggedInUser?.profileImage" alt="Profile Image" class="profile-image">
-        </div> 
-        <div class="profile-info">
-            <p><strong>Name:</strong> {{ loggedInUser?.name }}</p>
-            <p><strong>Email:</strong> {{ loggedInUser?.email }}</p>
-            <p><strong>Role:</strong> {{ loggedInUser?.role | titlecase }}</p>
-            @if (loggedInUser?.isVerified === true) {
-                <p><strong>Account Verified</strong></p>
-            }
-                <button (click)="editProfile()" type="button" class="profile-btn">Edit Profile</button>
+        <div class="profile-container">
+            <div class="container-header">
+                <img [src]="loggedInUser?.profileImage" alt="Profile Image" class="profile-image">
+            </div> 
+            <div class="profile-info">
+                <p><strong>Name:</strong> {{ loggedInUser?.name }}</p>
+                <p><strong>Email:</strong> {{ loggedInUser?.email }}</p>
+                <p><strong>Role:</strong> {{ loggedInUser?.role | titlecase }}</p>
+                @if (loggedInUser?.isVerified === true) {
+                    <p><strong>Account Verified</strong></p>
+                }
+                <div class="profile-btns">
+                    <button (click)="editProfile()" type="button" class="profile-btn">Edit Profile</button>
+                    <button class="update-btn" (click)="updatePassword()">Update Password</button>
+                </div>
+                    
+            </div>
         </div>
     </div>
-</div>
+@if(isEditing){
+        <app-add-users [canEditRole]="canEditRole" [isEditing]="isEditing" [selectedUser]="selectedUser" (hideForm)="hideEditForm($event)"
+        (isUpdated)="profileUpateSuccessful()"
+        />
+}
 
-
-
- @if(isEditing){
-   <app-add-users [canEditRole]="canEditRole" [isEditing]="isEditing" [selectedUser]="selectedUser" (hideForm)="hideEditForm($event)"
-   (isUpdated)="profileUpateSuccessful()"
-   />
- }
+ 
 
 

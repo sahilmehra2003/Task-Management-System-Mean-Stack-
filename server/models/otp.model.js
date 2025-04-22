@@ -18,7 +18,8 @@ const otpSchema=new Schema({
 
 async function sendVerificationEmail(email,otp) {
     try {
-        const mailResponse=await mailSender(email,"Verification email",otp);
+        const message=`<h2>Here is your otp for verification ${otp}</h2>`
+        const mailResponse=await mailSender(email,"Verification email",message);
         // console.log(mailResponse.response);
     } catch (error) {
        console.log("Error in sending verification mail",error.message); 

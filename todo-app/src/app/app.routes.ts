@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ForgotPasswordComponent } from './components/Password-change/forgot-password/forgot-password.component';
 export const routes: Routes = [
     {
         path:'auth',
@@ -14,8 +15,11 @@ export const routes: Routes = [
         loadChildren:()=>import('./components/Home/home.module').then(m=>m.HomeModule)
     },
     {
+       path:'forgot-password',
+       component:ForgotPasswordComponent
+    },
+    {
         path:'**',
         redirectTo:'auth/login',
-    },
-    
+    }
 ];

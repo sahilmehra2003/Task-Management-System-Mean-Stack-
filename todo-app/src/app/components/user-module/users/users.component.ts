@@ -6,11 +6,16 @@ import { AddUsersComponent } from '../admin/add-users/add-users.component';
 import { ToastService } from '../../../Services/utility/toast.service';
 import { AuthService } from '../../../Services/auth/auth.service';
 import { Observable, Subscription } from 'rxjs';
+import { DialogServiceService } from '../../../Services/utility/dialog-service.service';
+
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, AddUsersComponent],
+  imports: [
+    CommonModule, 
+    AddUsersComponent,
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
@@ -25,9 +30,11 @@ export class UsersComponent implements OnInit{
   selectedFile: File | null = null;
   usersrvc = inject(UserService);
   canEditRole: boolean = false;
+  isUpdatePassword:boolean=false;
   constructor(
     private toast: ToastService,
     private authSrvc:AuthService,
+    private updateDialogsrvc:DialogServiceService
   ) {}
   ngOnInit(): void {
     this.loggedInUser$=this.authSrvc.currentUser$;
@@ -67,6 +74,10 @@ export class UsersComponent implements OnInit{
         this.toast.show(res.message);
       }
     });
+  }
+  updatePassword(){
+    this.isUpdatePassword=true;
+    // this.updateDialogsrvc.updatePassword()
   }
   ngOnDestroy():void{
      if (this.userSubscription) {

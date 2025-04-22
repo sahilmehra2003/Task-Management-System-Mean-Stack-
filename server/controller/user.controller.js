@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const { validationSchemaForUser } = require("../helper/validation_schema");
+const { validationSchemaForUser,updatePasswordSchema } = require("../helper/validation_schema");
 const { fileUpload } = require("../helper/fileUpload");
 const { removeLocalFile } = require("../helper/remove_localFile");
 const { extractImagePublicId } = require('../helper/find_image_publicId')
@@ -124,6 +124,60 @@ exports.fetchUserById = async (req, res) => {
     });
   }
 };
+
+// update user password if verified
+exports.updatePassword=async(req,res)=>{
+  try {
+    const passwordSchema=updatePasswordSchema('password','newPassword','confirmNewPassword');
+    const validatedSchema=await passwordSchema.validateAsync(req.body);
+
+    if (validatedSchema.newPassword!==validatedSchema.confirmNewPassord) {
+       return res.status(400).json({
+          success:false,
+          message:"Passwords don't match"
+       })
+    }
+    //   1) GET CURRENT USER DATA FROM DB
+        const userId=req.user._id;
+        if(!userId){
+             return res.status(400).json({
+              success:false,
+              message:'No user id found'
+            })
+        }
+        const existingUser=await User.findById(userId).select("+password");
+        if (!existingUser) {
+          return res.status(404).json({
+             success:false,
+             message:'No user found, Invalid userId'
+          })
+        }
+    //   2)  CHECK IF THE SUPPLIED CURRENT PASSWORD IS CORRECT
+        if(!(await existingUser.isPasswordCorrect(validatedSchema.currentPassword))) {
+          return res.status(401).json({
+             success:false,
+             message:"Current password not equal to user password"
+          })
+        } 
+    //   3) IF SUPPLIED PASSWORD IS CORRECT, UPDATE USER PASSWORD WITH NEW VALUE
+          existingUser.password= validatedSchema.newPassword
+          await existingUser.save();
+          return res.status(200).json({
+             success:true,
+             message:"User password updated successfully",
+          })
+    
+  } catch (error) {
+     const isErrorJoi=error.isJoi===true;
+     const statusCode=isErrorJoi ? 422:500;
+     const message=isErrorJoi ? error.details[0]?.message : 'Server Error in updating password'
+     return res.status(statusCode).json({
+         success:false,
+         message:message,
+         error:error.message
+     })
+  }
+}
 
 exports.updateUser = async (req, res) => {
   try {

@@ -19,8 +19,12 @@ export const API_ENDPOINTS={
      LOGIN:'/auth/login',
      LOGOUT:'/auth/logout',
      GENERATE_OTP:'/auth/generateOTP',
-     VERIFY_OTP:'/auth/verifyOtp'
+     VERIFY_OTP:'/auth/verifyOtp',
+     FORGOT_PASSWORD:'/auth/forgotPassword',
+     RESET_PASSWORD:'/auth/resetPassword/:token'
    },
+
+
    NOTIFICATIONS:{
       CREATE:'/notification/createnotification',
       UPDATE:'/notification/updateNotification/:id',

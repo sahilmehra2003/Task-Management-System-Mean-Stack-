@@ -30,6 +30,7 @@ exports.verifyAdmin=async(req,res,next)=>{
             message:"Only admin can enter this route"
           })
        } 
+   
        next();
     } catch (error) {
         return res.status(500).json({

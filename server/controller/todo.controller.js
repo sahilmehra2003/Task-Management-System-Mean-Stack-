@@ -7,8 +7,8 @@ exports.createTodo = async (req, res) => {
         if (members.length===0) {
             
         }
-        const validateSchema=validationSchemaForTodo(['title','summary','dueDate','members','userId'],false);
-        await validateSchema.validateAsync(req.body)
+        const validateSchema=validationSchemaForTodo(['title','summary','dueDate','members'],false);
+        await validateSchema.validateAsync({title, summary, dueDate})
         if (userId==='') {
             userId=req.user.id;
         }
