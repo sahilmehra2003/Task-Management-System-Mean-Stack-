@@ -62,13 +62,13 @@ const updatePasswordSchema = Joi.object({
             'string.pattern.base': `"New Password" must contain uppercase, lowercase, number, and special character`,
             'any.required': `"New Password" is a required field`
         }),
-    confirmNewPassord:Joi.string()
+    confirmPassword:Joi.string()
                .required()
-               .label('confirmNewPassword')
+               .label('confirmPassword')
                .messages({ 
-                'string.empty': `"Confirm New Password" cannot be empty`,
-                'any.required': `"Confirm New Password" is a required field`
-            })    
+                'string.empty': `"Confirm  Password" cannot be empty`,
+                'any.required': `"Confirm  Password" is a required field`
+    })    
 });
 
 

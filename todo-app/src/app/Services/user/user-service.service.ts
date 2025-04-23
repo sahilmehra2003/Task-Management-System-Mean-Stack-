@@ -3,12 +3,21 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { API_ENDPOINTS } from '../../constant/api-endpoints';
 import { Observable } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+
+interface UpdatePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword:string;
+}
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService{
   
-   private apiUrl=environment.apiBaseUrl
+  private apiUrl=environment.apiBaseUrl
+ 
   constructor(private http:HttpClient) {}
   getUserById(id:string):Observable<any>{
     return this.http.get(`${this.apiUrl}${API_ENDPOINTS.USERS.GET_USER_BY_ID.replace(':id',id)}`)
@@ -28,4 +37,9 @@ export class UserService{
   deleteUser(id:string):Observable<any>{
     return this.http.delete(`${this.apiUrl}${API_ENDPOINTS.USERS.DELETE.replace(':id',id)}`);
   }
+
+  updatePassword(payload:UpdatePasswordPayload):Observable<any>{
+      return this.http.patch(`${this.apiUrl}${API_ENDPOINTS.USERS.UPDATE_USER_PASSWORD}`,{currentPassword:payload.currentPassword,newPassword:payload.newPassword,confirmPassword:payload.confirmPassword})
+  }
+
 }

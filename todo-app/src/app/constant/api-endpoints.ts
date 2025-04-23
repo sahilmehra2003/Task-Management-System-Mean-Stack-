@@ -4,7 +4,8 @@ export const API_ENDPOINTS={
         ADMIN_CREATE_USER:'/user/admincreateuser',
         UPDATE:'/user/updateuserdetails/:id',
         DELETE:'/user/deleteuser/:id',
-        GET_USER_BY_ID:'/user/getuserbyid/:id'
+        GET_USER_BY_ID:'/user/getuserbyid/:id',
+        UPDATE_USER_PASSWORD:'/user/updateUserPassword'
     },
     TODOS:{
     GET_ALL:'/todo/getAllTodo',

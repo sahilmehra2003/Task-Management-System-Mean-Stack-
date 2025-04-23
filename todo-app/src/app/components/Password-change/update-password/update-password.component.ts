@@ -11,7 +11,7 @@ import { AuthService } from '../../../Services/auth/auth.service'; // Adjust pat
 import { ToastService } from '../../../Services/utility/toast.service'; // Adjust path
 
 // --- Custom Validator Function for Password Match ---
-// (Can be placed outside the class or in a separate validators file)
+
 export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('password');
   const confirmPassword = control.get('confirmPassword');
@@ -23,7 +23,7 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
 
   return password.value === confirmPassword.value ? null : { passwordMismatch: true };
 };
-// --- End Custom Validator ---
+
 
 
 @Component({

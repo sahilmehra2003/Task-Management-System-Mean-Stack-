@@ -7,6 +7,7 @@ import { ToastService } from '../../../Services/utility/toast.service';
 import { AuthService } from '../../../Services/auth/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { DialogServiceService } from '../../../Services/utility/dialog-service.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -77,7 +78,7 @@ export class UsersComponent implements OnInit{
   }
   updatePassword(){
     this.isUpdatePassword=true;
-    // this.updateDialogsrvc.updatePassword()
+     this.updateDialogsrvc.openUpdatePasswordDialog();
   }
   ngOnDestroy():void{
      if (this.userSubscription) {

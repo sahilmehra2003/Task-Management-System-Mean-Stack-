@@ -17,7 +17,10 @@ export class LoginComponent{
     password: '',
   };
   isSubmitted:boolean=false;
-  constructor(private authsrvc:AuthService,private toast:ToastService) {}
+  constructor(
+    private authsrvc:AuthService,
+    private toast:ToastService
+  ) {}
   clickEvent(event: MouseEvent) {
     this.hide=!this.hide;
     event.stopPropagation();
@@ -31,14 +34,14 @@ export class LoginComponent{
             this.authsrvc.storeLoginState(token,user)
             this.toast.show(res.message)
             this.router.navigateByUrl('home')
-         
+            
         },
         error:(err)=>{
           const errorMessage=err.error?.message
           if (errorMessage==='User account not verified') {
-            console.log("reaching here");
             this.router.navigate(['auth/verify-otp'],{queryParams:{email:this.userObj.email}})
           }
+          this.isSubmitted=false;
           this.toast.show(errorMessage);
         },
         complete:()=>{
