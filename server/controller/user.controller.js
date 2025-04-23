@@ -128,10 +128,9 @@ exports.fetchUserById = async (req, res) => {
 // update user password if verified
 exports.updatePassword=async(req,res)=>{
   try {
-    const passwordSchema=updatePasswordSchema('password','newPassword','confirmNewPassword');
-    const validatedSchema=await passwordSchema.validateAsync(req.body);
-
-    if (validatedSchema.newPassword!==validatedSchema.confirmNewPassord) {
+    console.log(req.body)
+    const validatedSchema=await updatePasswordSchema.validateAsync(req.body);
+    if (validatedSchema.newPassword!==validatedSchema.confirmPassword) {
        return res.status(400).json({
           success:false,
           message:"Passwords don't match"
