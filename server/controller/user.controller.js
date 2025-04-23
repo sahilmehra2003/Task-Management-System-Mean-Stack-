@@ -128,7 +128,7 @@ exports.fetchUserById = async (req, res) => {
 // update user password if verified
 exports.updatePassword=async(req,res)=>{
   try {
-    console.log(req.body)
+   
     const validatedSchema=await updatePasswordSchema.validateAsync(req.body);
     if (validatedSchema.newPassword!==validatedSchema.confirmPassword) {
        return res.status(400).json({
